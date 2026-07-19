@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reylic — Weby a e-shopy na mieru</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF1F7;
+    --card:#FFFFFF;
+    --ink:#0E1116;
+    --ink-soft:#565D71;
+    --ink-faint:#8A90A3;
+    --blue:#2A4A93;
+    --blue-deep:#16295C;
+    --grid:#DCE4F2;
+    --grid-soft:#E7ECF6;
+    --spark:#FFC845;
+    --spark-deep:#F0A400;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  ::selection{background:var(--spark); color:var(--ink);}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+  body::before{
+    content:'';
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      linear-gradient(180deg, rgba(238,241,247,0) 0%, rgba(238,241,247,0.6) 55%, rgba(238,241,247,1) 88%),
+      linear-gradient(var(--grid-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-soft) 1px, transparent 1px);
+    background-size:100% 100%, 56px 56px, 56px 56px;
+  }
+  section, header.hero{scroll-margin-top:88px;}
+  .wrap{max-width:1200px; margin:0 auto; padding:0 32px; position:relative; z-index:1;}
+  h1,h2,h3,h4{font-family:'Space Grotesk', sans-serif; letter-spacing:-0.025em; color:var(--ink);}
+  a{color:inherit; text-decoration:none;}
+  img,svg{display:block;}
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:100;
+    background:rgba(238,241,247,0.72);
+    backdrop-filter:blur(14px) saturate(160%);
+    border-bottom:1px solid var(--grid);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:74px;}
+  .logo{display:flex; align-items:center; gap:11px; font-weight:700; font-size:18.5px;}
+  .logo-mark{
+    width:32px; height:32px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--ink);
+  }
+  .navlinks{display:flex; gap:38px; font-size:14.5px; font-weight:500; color:var(--ink-soft);}
+  .navlinks a{position:relative; transition:color .2s;}
+  .navlinks a:hover{color:var(--ink);}
+  .navlinks a::after{
+    content:''; position:absolute; left:0; bottom:-6px; width:0; height:2px; background:var(--spark);
+    transition:width .2s ease;
+  }
+  .navlinks a:hover::after{width:100%;}
+  .nav-cta{
+    background:var(--ink); color:#fff; padding:10px 20px;
+    border-radius:8px; font-size:13.5px; font-weight:600;
+    box-shadow:0 1px 0 rgba(255,255,255,0.08) inset, 0 6px 14px -6px rgba(14,17,22,0.4);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .nav-cta:hover{transform:translateY(-2px); box-shadow:0 10px 20px -8px rgba(14,17,22,0.5);}
+  .lang-toggle{
+    border:1.5px solid var(--grid); background:var(--card); color:var(--ink); font-family:'JetBrains Mono';
+    font-size:13px; font-weight:600; padding:8px 13px; border-radius:8px; cursor:pointer; transition:border-color .15s ease;
+  }
+  .lang-toggle:hover{border-color:var(--ink);}
+
+  /* SHARED */
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace; font-size:12.5px; font-weight:500; color:var(--blue);
+    background:var(--card); border:1px solid var(--grid); padding:7px 13px 7px 11px; border-radius:20px;
+    box-shadow:0 1px 2px rgba(20,30,60,0.04);
+  }
+  .eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--spark); box-shadow:0 0 0 3px rgba(255,200,69,0.25);}
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; border-radius:10px;
+    font-weight:600; font-size:14.5px; padding:15px 24px; transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:var(--ink); color:#fff;
+    box-shadow:0 1px 0 rgba(255,255,255,0.1) inset, 0 8px 20px -8px rgba(14,17,22,0.45);
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 1px 0 rgba(255,255,255,0.1) inset, 0 14px 26px -10px rgba(14,17,22,0.5);}
+  .btn-primary svg{transition:transform .18s ease;}
+  .btn-primary:hover svg{transform:translateX(3px);}
+  .btn-ghost{
+    border:1.5px solid var(--grid); background:var(--card); color:var(--ink);
+  }
+  .btn-ghost:hover{border-color:var(--ink);}
+  .btn-block{width:100%; justify-content:center;}
+
+  /* HERO */
+  .hero{padding:88px 0 64px;}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 1fr; gap:64px; align-items:center;}
+  .hero .eyebrow{margin-bottom:24px;}
+  .hero h1{font-size:clamp(34px,4.4vw,54px); line-height:1.08; font-weight:700; margin-bottom:22px;}
+  .hero h1 em{font-style:normal; position:relative; white-space:nowrap;}
+  .hero h1 em::after{
+    content:''; position:absolute; left:-2px; right:-2px; bottom:6px; height:14px; background:var(--spark);
+    z-index:-1; opacity:0.9; border-radius:3px 8px 3px 8px;
+  }
+  .hero p.lead{font-size:17.5px; line-height:1.65; color:var(--ink-soft); max-width:440px; margin-bottom:32px;}
+  .btn-row{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:34px;}
+  .trust-row{display:flex; gap:22px; flex-wrap:wrap;}
+  .trust-item{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); font-weight:500;}
+  .trust-item svg{flex-shrink:0;}
+
+  /* HERO VISUAL — laptop + floating browser cards */
+  .visual{position:relative; height:460px;}
+  .device{
+    position:absolute; left:6%; top:14%; width:88%;
+    border-radius:14px; background:var(--ink); padding:10px 10px 0;
+    box-shadow:0 40px 70px -24px rgba(14,17,22,0.45);
+  }
+  .device-bar{display:flex; align-items:center; gap:6px; padding:9px 6px;}
+  .device-dot{width:8px; height:8px; border-radius:50%; background:#3A4152;}
+  .device-screen{background:var(--card); border-radius:8px 8px 0 0; overflow:hidden; height:230px;}
+  .float-card{
+    position:absolute; width:230px; border-radius:12px; background:var(--card);
+    border:1px solid var(--grid); box-shadow:0 24px 44px -18px rgba(14,17,22,0.32);
+    overflow:hidden;
+  }
+  .fc1{top:0; right:0; transform:rotate(5deg); z-index:3;}
+  .fc2{bottom:6px; left:2%; transform:rotate(-4deg); z-index:3;}
+  .mini-bar{height:20px; display:flex; align-items:center; gap:4px; padding:0 9px; background:#F4F6FB; border-bottom:1px solid var(--grid);}
+  .mini-dot{width:5px; height:5px; border-radius:50%; background:#D7DEEC;}
+
+  /* generic mock content builder */
+  .m-pad{padding:12px;}
+  .m-topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:9px;}
+  .m-brand{font-family:'Space Grotesk'; font-weight:600; font-size:11.5px;}
+  .m-nav{display:flex; gap:6px;}
+  .m-nav span{width:14px; height:3px; border-radius:2px; background:currentColor; opacity:0.35;}
+  .m-photo{border-radius:6px; position:relative; overflow:hidden;}
+  .m-photo::after{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 60%);
+  }
+  .m-line{height:6px; border-radius:3px; background:currentColor; opacity:0.14;}
+  .m-line.short{width:55%;}
+  .m-chip{display:inline-flex; align-items:center; font-family:'JetBrains Mono'; font-size:8.5px; padding:3px 7px; border-radius:5px; font-weight:500;}
+  .m-rating{display:flex; gap:2px; font-size:9px; color:var(--spark-deep);}
+
+  /* Section framing */
+  section{padding:100px 0; position:relative;}
+  .section-head{max-width:580px; margin-bottom:56px;}
+  .section-head .eyebrow{margin-bottom:18px;}
+  .section-head h2{font-size:clamp(28px,3.2vw,38px); font-weight:700; margin-bottom:14px;}
+  .section-head p{color:var(--ink-soft); font-size:16px; line-height:1.65;}
+  .section-head.center{margin-left:auto; margin-right:auto; text-align:center;}
+
+  /* SERVICES */
+  .services{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .service-card{
+    background:var(--card); border:1px solid var(--grid); border-radius:16px; padding:30px;
+    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    position:relative;
+  }
+  .service-card:hover{transform:translateY(-6px); box-shadow:0 26px 40px -22px rgba(14,17,22,0.28); border-color:#c7d3ea;}
+  .service-icon{
+    width:46px; height:46px; border-radius:12px; background:var(--paper); border:1px solid var(--grid);
+    display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+  }
+  .service-card h3{font-size:19.5px; margin-bottom:10px; font-weight:600;}
+  .service-card p{color:var(--ink-soft); font-size:14.5px; line-height:1.62; margin-bottom:16px;}
+  .service-tag{
+    display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono'; font-size:11.5px; color:var(--blue);
+    background:#E7EDFA; padding:5px 11px; border-radius:7px; font-weight:500;
+  }
+
+  /* PORTFOLIO MOCKUPS */
+  .portfolio-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:20px;}
+  .mock-frame{
+    border-radius:14px; overflow:hidden; border:1px solid var(--grid); background:var(--card);
+    box-shadow:0 14px 30px -18px rgba(14,17,22,0.22); transition:transform .22s ease, box-shadow .22s ease;
+  }
+  .mock-frame:hover{transform:translateY(-6px); box-shadow:0 24px 40px -18px rgba(14,17,22,0.3);}
+  .mock-bar{height:24px; display:flex; align-items:center; gap:5px; padding:0 10px; background:#F4F6FB; border-bottom:1px solid var(--grid);}
+  .mock-dot{width:6px; height:6px; border-radius:50%; background:#D7DEEC;}
+  .mock-body{padding:13px; background:var(--mbg); color:var(--mtext);}
+  .mock-hero{height:50px; border-radius:7px; background:var(--macc); margin-bottom:9px; position:relative; overflow:hidden;}
+  .mock-hero::after{content:''; position:absolute; inset:0; background:radial-gradient(circle at 25% 25%, rgba(255,255,255,0.3), transparent 65%);}
+  .mock-row{display:flex; gap:5px; margin-bottom:7px;}
+  .mock-row div{flex:1; height:20px; border-radius:5px; background:var(--mchip);}
+  .mock-caption{padding:12px 14px 14px; border-top:1px solid var(--grid); display:flex; align-items:center; justify-content:space-between;}
+  .mock-caption b{font-size:13px; display:block; font-weight:600;}
+  .mock-wrap{position:relative; border-radius:14px;}
+  .mock-overlay{
+    position:absolute; inset:0; border-radius:14px; background:rgba(14,17,22,0.86);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center;
+    opacity:0; transition:opacity .25s ease; padding:16px;
+  }
+  .mock-wrap:hover .mock-overlay{opacity:1;}
+  .mock-overlay p{color:#fff; font-size:13px; font-weight:500; line-height:1.4;}
+  .mock-overlay a{
+    background:var(--spark); color:var(--ink); font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:8px;
+    display:inline-flex; align-items:center; gap:5px; transition:transform .15s ease;
+  }
+  .mock-overlay a:hover{transform:translateY(-2px);}
+  .mock-caption span{font-family:'JetBrains Mono'; font-size:9.5px; color:var(--blue); background:#E7EDFA; padding:3px 8px; border-radius:5px;}
+
+  /* PROCESS */
+  .process{
+    background:linear-gradient(165deg, var(--ink), var(--blue-deep) 130%);
+    color:#fff; border-radius:24px; padding:60px 52px; position:relative; overflow:hidden;
+  }
+  .process::before{
+    content:''; position:absolute; top:-40%; right:-10%; width:420px; height:420px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,200,69,0.16), transparent 70%);
+  }
+  .process .section-head p{color:#B9C0D6;}
+  .process .section-head h2{color:#FFFFFF;}
+  .process .eyebrow{background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.14); color:var(--spark);}
+  .process .eyebrow .dot{box-shadow:0 0 0 3px rgba(255,200,69,0.2);}
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:26px; position:relative;}
+  .step{padding-top:20px; border-top:2px solid rgba(255,255,255,0.14); position:relative;}
+  .step-num{font-family:'JetBrains Mono'; color:var(--spark); font-size:13px; margin-bottom:12px; display:block;}
+  .step h4{font-size:17.5px; margin-bottom:8px; font-weight:600; color:#fff;}
+  .step p{color:#B9C0D6; font-size:13.8px; line-height:1.6;}
+
+  /* PRICING */
+  .pricing{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; align-items:stretch;}
+  .price-card{
+    background:var(--card); border:1px solid var(--grid); border-radius:18px; padding:32px;
+    display:flex; flex-direction:column; transition:transform .22s ease, box-shadow .22s ease;
+  }
+  .price-card:hover{transform:translateY(-4px); box-shadow:0 24px 40px -24px rgba(14,17,22,0.25);}
+  .price-card.highlight{
+    border:1.5px solid var(--ink); position:relative;
+    box-shadow:0 30px 50px -26px rgba(14,17,22,0.35);
+  }
+  .price-card.highlight::before{
+    content:'najžiadanejšie'; position:absolute; top:-13px; left:32px;
+    background:var(--spark); font-family:'JetBrains Mono'; font-size:10.5px; font-weight:500; padding:5px 11px; border-radius:20px; color:var(--ink);
+  }
+  .price-card h3{font-size:18.5px; margin-bottom:4px; font-weight:600;}
+  .price-card .sub{font-size:13px; color:var(--ink-faint);}
+  .price-card .price{font-family:'Space Grotesk'; font-size:32px; font-weight:700; margin:18px 0 4px;}
+  .price-card .price span{font-size:14px; font-weight:500; color:var(--ink-soft);}
+  .price-card .price span.amount{font-size:32px; font-weight:700; color:var(--ink); font-family:'Space Grotesk', sans-serif;}
+  .price-card ul{list-style:none; margin:16px 0 20px; flex:1;}
+  .price-card li{font-size:13.8px; color:var(--ink-soft); padding:9px 0; border-top:1px solid var(--grid-soft); display:flex; gap:9px; align-items:flex-start;}
+  .price-card li svg{flex-shrink:0; margin-top:2px;}
+  .price-note{font-size:12px; color:var(--ink-faint); margin-bottom:16px;}
+
+  /* CONTACT */
+  .contact-box{
+    background:var(--card); border:1px solid var(--grid); border-radius:22px;
+    padding:56px; display:grid; grid-template-columns:1fr 1fr; gap:56px;
+    box-shadow:0 30px 60px -34px rgba(14,17,22,0.25);
+  }
+  .contact-box h2{font-size:30px; margin-bottom:14px;}
+  .contact-box p{color:var(--ink-soft); font-size:15px; line-height:1.6; margin-bottom:24px;}
+  .contact-info{display:flex; flex-direction:column; gap:12px;}
+  .contact-info div{display:flex; align-items:center; gap:11px; font-size:14.5px;}
+  .contact-info .ci-icon{
+    width:34px; height:34px; border-radius:9px; background:var(--paper); border:1px solid var(--grid);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  form{display:flex; flex-direction:column; gap:13px;}
+  input, textarea{
+    border:1.5px solid var(--grid); border-radius:9px; padding:13px 14px; font-family:'Inter';
+    font-size:14px; background:var(--paper); color:var(--ink); transition:border-color .15s ease;
+  }
+  input::placeholder, textarea::placeholder{color:var(--ink-faint);}
+  textarea{resize:vertical; min-height:88px;}
+  input:focus, textarea:focus{outline:none; border-color:var(--blue);}
+
+  /* FAQ */
+  .faq-list{display:flex; flex-direction:column; gap:14px; max-width:760px;}
+  .faq-item{background:var(--card); border:1px solid var(--grid); border-radius:14px; padding:22px 26px;}
+  .faq-item h4{font-size:15.5px; font-weight:600; margin-bottom:8px; display:flex; gap:10px; align-items:flex-start;}
+  .faq-item h4 span{color:var(--blue); font-family:'JetBrains Mono'; font-size:13px;}
+  .faq-item h4 span.q{color:var(--ink); font-family:'Space Grotesk', sans-serif; font-size:15.5px; font-weight:600;}
+  .faq-item p{font-size:14px; color:var(--ink-soft); line-height:1.6; padding-left:24px;}
+
+  /* ADD-ONS */
+  .addons-list{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; max-width:900px;}
+  .addon-item{
+    background:var(--card); border:1px solid var(--grid); border-radius:12px; padding:18px 20px;
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .addon-item:hover{transform:translateY(-3px); box-shadow:0 16px 28px -18px rgba(14,17,22,0.22);}
+  .addon-item .name{font-size:14.5px; font-weight:600;}
+  .addon-item .desc{font-size:12.5px; color:var(--ink-soft); margin-top:3px;}
+  .addon-item .price{font-family:'JetBrains Mono'; font-size:14px; color:var(--blue); white-space:nowrap; font-weight:500;}
+
+  footer{border-top:1px solid var(--grid); padding:36px 0;}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--ink-faint);}
+  footer .flinks{display:flex; gap:22px;}
+
+  @media(max-width:960px){
+    .hero-grid{grid-template-columns:1fr;}
+    .visual{display:none;}
+    .services, .steps, .pricing{grid-template-columns:1fr;}
+    .portfolio-grid{grid-template-columns:repeat(2,1fr);}
+    .process{padding:40px 26px;}
+    .contact-box{grid-template-columns:1fr; padding:32px;}
+    .navlinks{display:none;}
+    section{padding:64px 0;}
+    footer .wrap{flex-direction:column; gap:12px;}
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">
+      <span class="logo-mark">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M8 4L2 12L8 20M16 4L22 12L16 20" stroke="#FFC845" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      Reylic
+    </div>
+    <div class="navlinks">
+      <a href="#sluzby" data-sk="Služby" data-en="Services">Služby</a>
+      <a href="#doplnky" data-sk="Doplnky" data-en="Add-ons">Doplnky</a>
+      <a href="#prace" data-sk="Práce" data-en="Work">Práce</a>
+      <a href="#proces" data-sk="Proces" data-en="Process">Proces</a>
+      <a href="#cennik" data-sk="Cenník" data-en="Pricing">Cenník</a>
+      <a href="#faq" data-sk="FAQ" data-en="FAQ">FAQ</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="lang-toggle" id="langToggle" type="button">EN</button>
+      <a href="#kontakt" class="nav-cta" data-sk="Napísať mi" data-en="Contact me">Napísať mi</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span><span data-sk="dostupné pre nové projekty" data-en="available for new projects">dostupné pre nové projekty</span></div>
+      <h1 data-sk-html="Web, ktorý pracuje<br>za vás <em>od prvého dňa.</em>" data-en-html="A website that works<br>for you <em>from day one.</em>">Web, ktorý pracuje<br>za vás <em>od prvého dňa.</em></h1>
+      <p class="lead" data-sk="Navrhujem a staviam e-shopy na Shopify aj firemné stránky na mieru — bez šablón, bez kompromisov na dizajne, s cenou primeranou malému biznisu." data-en="I design and build Shopify stores and custom business websites — no templates, no compromises on design, at a price that fits small businesses.">Navrhujem a staviam e-shopy na Shopify aj firemné stránky na mieru — bez šablón, bez kompromisov na dizajne, s cenou primeranou malému biznisu.</p>
+      <div class="btn-row">
+        <a href="#kontakt" class="btn btn-primary"><span data-sk="Chcem ponuku" data-en="Get a quote">Chcem ponuku</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#prace" class="btn btn-ghost" data-sk="Pozrieť práce" data-en="View my work">Pozrieť práce</a>
+      </div>
+      <div class="trust-row">
+        <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 12L11 14L15 9" stroke="#2A4A93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#2A4A93" stroke-width="1.6"/></svg><span data-sk="Responzívny dizajn" data-en="Responsive design">Responzívny dizajn</span></div>
+        <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 12L11 14L15 9" stroke="#2A4A93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#2A4A93" stroke-width="1.6"/></svg><span data-sk="SEO nastavenie" data-en="SEO setup">SEO nastavenie</span></div>
+        <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 12L11 14L15 9" stroke="#2A4A93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#2A4A93" stroke-width="1.6"/></svg><span data-sk="Rýchle dodanie" data-en="Fast delivery">Rýchle dodanie</span></div>
+      </div>
+    </div>
+
+    <div class="visual">
+      <div class="device">
+        <div class="device-bar"><div class="device-dot"></div><div class="device-dot"></div><div class="device-dot"></div></div>
+        <div class="device-screen">
+          <div class="m-pad" style="background:#101216; height:100%; color:#fff;">
+            <div class="m-topbar">
+              <div class="m-brand">nutrilab.sk</div>
+              <div class="m-nav"><span></span><span></span><span></span></div>
+            </div>
+            <div class="m-photo" style="height:110px; background:linear-gradient(135deg,#1B2A1E,#3E6B45); margin-bottom:10px;"></div>
+            <div style="display:flex; gap:8px;">
+              <div style="flex:1;">
+                <div class="m-photo" style="height:44px; background:linear-gradient(135deg,#22331F,#4E7A46); margin-bottom:6px;"></div>
+                <div class="m-line short" style="margin-bottom:4px;"></div>
+                <div class="m-chip" style="background:rgba(198,255,61,0.15); color:#C6FF3D;">24,90 €</div>
+              </div>
+              <div style="flex:1;">
+                <div class="m-photo" style="height:44px; background:linear-gradient(135deg,#2A2320,#6B4A32); margin-bottom:6px;"></div>
+                <div class="m-line short" style="margin-bottom:4px;"></div>
+                <div class="m-chip" style="background:rgba(198,255,61,0.15); color:#C6FF3D;">19,90 €</div>
+              </div>
+              <div style="flex:1;">
+                <div class="m-photo" style="height:44px; background:linear-gradient(135deg,#1C2733,#3E5C7A); margin-bottom:6px;"></div>
+                <div class="m-line short" style="margin-bottom:4px;"></div>
+                <div class="m-chip" style="background:rgba(198,255,61,0.15); color:#C6FF3D;">32,00 €</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="float-card fc1">
+        <div class="mini-bar"><div class="mini-dot"></div><div class="mini-dot"></div><div class="mini-dot"></div></div>
+        <div class="m-pad" style="background:#FAF6EF; color:#5A3E23;">
+          <div class="m-topbar"><div class="m-brand">Café Lumen</div><div class="m-rating">★★★★★</div></div>
+          <div class="m-photo" style="height:50px; background:linear-gradient(135deg,#C69C6D,#8A6240);"></div>
+        </div>
+      </div>
+      <div class="float-card fc2">
+        <div class="mini-bar"><div class="mini-dot"></div><div class="mini-dot"></div><div class="mini-dot"></div></div>
+        <div class="m-pad" style="background:#F4F6FB; color:#16295C;">
+          <div class="m-topbar"><div class="m-brand" data-sk="Kaderníctvo Bella" data-en="Bella Hair Salon">Kaderníctvo Bella</div></div>
+          <div class="m-line" style="margin-bottom:5px;"></div>
+          <div class="m-line short"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="sluzby">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span><span data-sk="služby" data-en="services">služby</span></div>
+      <h2 data-sk="Riešenie pre každý typ biznisu" data-en="A solution for every kind of business">Riešenie pre každý typ biznisu</h2>
+      <p data-sk="Od jednoduchej prezentácie po plnohodnotný e-shop — každý projekt dostáva rovnakú pozornosť k detailu." data-en="From a simple presentation to a full online store — every project gets the same attention to detail.">Od jednoduchej prezentácie po plnohodnotný e-shop — každý projekt dostáva rovnakú pozornosť k detailu.</p>
+    </div>
+    <div class="services">
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M6 8H18L17 20H7L6 8Z" stroke="#2A4A93" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 8V6C9 4.34 10.34 3 12 3C13.66 3 15 4.34 15 6V8" stroke="#2A4A93" stroke-width="1.7"/></svg>
+        </div>
+        <h3 data-sk="Shopify e-shop" data-en="Shopify store">Shopify e-shop</h3>
+        <p data-sk="Kompletný online obchod pripravený predávať od prvého dňa — produkty, platby, doprava aj emailový marketing správne nastavené." data-en="A complete online store ready to sell from day one — products, payments, shipping and email marketing all properly set up.">Kompletný online obchod pripravený predávať od prvého dňa — produkty, platby, doprava aj emailový marketing správne nastavené.</p>
+        <span class="service-tag" data-sk="napr. Nutrilab, Aurelia Home" data-en="e.g. Nutrilab, Aurelia Home">napr. Nutrilab, Aurelia Home</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="1.5" stroke="#2A4A93" stroke-width="1.7"/><path d="M8 7H10M14 7H16M8 11H10M14 11H16M8 15H10M14 15H16" stroke="#2A4A93" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <h3 data-sk="Firemná stránka" data-en="Business website">Firemná stránka</h3>
+        <p data-sk="Prezentácia, ktorá pôsobí dôveryhodne a privedie zákazníkov — jasná ponuka, kontakt a dôvod, prečo si vybrať práve vás." data-en="A presentation that builds trust and brings in customers — a clear offer, contact info, and a reason to choose you.">Prezentácia, ktorá pôsobí dôveryhodne a privedie zákazníkov — jasná ponuka, kontakt a dôvod, prečo si vybrať práve vás.</p>
+        <span class="service-tag" data-sk="pre lokálne firmy" data-en="for local businesses">pre lokálne firmy</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#2A4A93" stroke-width="1.7"/><circle cx="12" cy="12" r="4.5" stroke="#2A4A93" stroke-width="1.7"/><circle cx="12" cy="12" r="1" fill="#2A4A93"/></svg>
+        </div>
+        <h3 data-sk="Landing page" data-en="Landing page">Landing page</h3>
+        <p data-sk="Jedna cielená stránka pre kampaň, produkt alebo osobnú značku — postavená tak, aby návštevníka priviedla k akcii." data-en="One focused page for a campaign, product, or personal brand — built to drive the visitor to take action.">Jedna cielená stránka pre kampaň, produkt alebo osobnú značku — postavená tak, aby návštevníka priviedla k akcii.</p>
+        <span class="service-tag" data-sk="rýchle spustenie" data-en="fast launch">rýchle spustenie</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 12L12 4L20 12M6 10V20H18V10" stroke="#2A4A93" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 20V14H9V20" stroke="#2A4A93" stroke-width="1.7"/></svg>
+        </div>
+        <h3 data-sk="Redizajn existujúceho webu" data-en="Redesign of existing website">Redizajn existujúceho webu</h3>
+        <p data-sk="Máte web, ktorý pôsobí zastarano alebo zle funguje na mobile? Prerobím ho na moderný, rýchly a responzívny." data-en="Have a website that looks outdated or works poorly on mobile? I'll rebuild it to be modern, fast, and responsive.">Máte web, ktorý pôsobí zastarano alebo zle funguje na mobile? Prerobím ho na moderný, rýchly a responzívny.</p>
+        <span class="service-tag" data-sk="obnova starého webu" data-en="refresh an old site">obnova starého webu</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3L14.5 9L21 9.5L16 13.5L17.5 20L12 16.5L6.5 20L8 13.5L3 9.5L9.5 9L12 3Z" stroke="#2A4A93" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 data-sk="Osobná značka / Portfólio" data-en="Personal brand / Portfolio">Osobná značka / Portfólio</h3>
+        <p data-sk="Web, ktorý reprezentuje vás alebo vašu tvorbu — pre influencerov, fotografov, konzultantov a tvorcov obsahu." data-en="A website that represents you or your work — for influencers, photographers, consultants, and content creators.">Web, ktorý reprezentuje vás alebo vašu tvorbu — pre influencerov, fotografov, konzultantov a tvorcov obsahu.</p>
+        <span class="service-tag" data-sk="pre jednotlivcov" data-en="for individuals">pre jednotlivcov</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#2A4A93" stroke-width="1.7"/><path d="M3 10H21" stroke="#2A4A93" stroke-width="1.7"/><path d="M8 3V7M16 3V7" stroke="#2A4A93" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <h3 data-sk="Rezervačný systém" data-en="Booking system">Rezervačný systém</h3>
+        <p data-sk="Online objednávanie termínov priamo cez web — ideálne pre kaderníctva, reštaurácie, kliniky a služby na termín." data-en="Online appointment booking straight through the website — ideal for salons, restaurants, clinics, and appointment-based services.">Online objednávanie termínov priamo cez web — ideálne pre kaderníctva, reštaurácie, kliniky a služby na termín.</p>
+        <span class="service-tag" data-sk="automatizácia objednávok" data-en="booking automation">automatizácia objednávok</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="doplnky">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span><span data-sk="doplnkové služby" data-en="add-on services">doplnkové služby</span></div>
+      <h2 data-sk="Rozšírte si balík podľa potreby" data-en="Extend your package as needed">Rozšírte si balík podľa potreby</h2>
+      <p data-sk="Tieto položky sa dajú pridať k ktorémukoľvek balíku vyššie — napíšte mi, čo z toho by sa vám hodilo." data-en="These can be added to any package above — just let me know what would be useful for you.">Tieto položky sa dajú pridať k ktorémukoľvek balíku vyššie — napíšte mi, čo z toho by sa vám hodilo.</p>
+    </div>
+    <div class="addons-list">
+      <div class="addon-item">
+        <div><div class="name" data-sk="Extra podstránka" data-en="Extra subpage">Extra podstránka</div><div class="desc" data-sk="Ďalšia stránka nad rámec balíka" data-en="An additional page beyond the package">Ďalšia stránka nad rámec balíka</div></div>
+        <div class="price">+40 €</div>
+      </div>
+      <div class="addon-item">
+        <div><div class="name" data-sk="SEO balík" data-en="SEO package">SEO balík</div><div class="desc" data-sk="Nastavenie pre lepšie umiestnenie v Google" data-en="Setup for better Google rankings">Nastavenie pre lepšie umiestnenie v Google</div></div>
+        <div class="price">+50 €</div>
+      </div>
+      <div class="addon-item">
+        <div><div class="name" data-sk="Blog / novinky sekcia" data-en="Blog / news section">Blog / novinky sekcia</div><div class="desc" data-sk="Priestor na pravidelné pridávanie článkov" data-en="A space for regularly adding articles">Priestor na pravidelné pridávanie článkov</div></div>
+        <div class="price">+60 €</div>
+      </div>
+      <div class="addon-item">
+        <div><div class="name" data-sk="Nastavenie domény a emailu" data-en="Domain and email setup">Nastavenie domény a emailu</div><div class="desc" data-sk="Vlastná doména + firemný email na mieru" data-en="Custom domain + business email set up for you">Vlastná doména + firemný email na mieru</div></div>
+        <div class="price">+25 €</div>
+      </div>
+      <div class="addon-item">
+        <div><div class="name" data-sk="Viacjazyčná verzia" data-en="Multilingual version">Viacjazyčná verzia</div><div class="desc" data-sk="Web v ďalšom jazyku (napr. SK + EN)" data-en="Website in another language (e.g. SK + EN)">Web v ďalšom jazyku (napr. SK + EN)</div></div>
+        <div class="price">+80 €</div>
+      </div>
+      <div class="addon-item">
+        <div><div class="name" data-sk="Mesačná údržba" data-en="Monthly maintenance">Mesačná údržba</div><div class="desc" data-sk="Priebežné úpravy, aktualizácie, podpora" data-en="Ongoing updates, changes, and support">Priebežné úpravy, aktualizácie, podpora</div></div>
+        <div class="price" data-sk="25 €/mes." data-en="€25/mo.">25 €/mes.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="prace">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span><span data-sk="ukážky prác" data-en="portfolio">ukážky prác</span></div>
+      <h2 data-sk="Ako vyzerajú naše stránky" data-en="What our websites look like">Ako vyzerajú naše stránky</h2>
+      <p data-sk="Každý projekt dostáva vlastný dizajn na mieru — žiadne dve stránky nevyzerajú rovnako." data-en="Every project gets its own custom design — no two websites look the same.">Každý projekt dostáva vlastný dizajn na mieru — žiadne dve stránky nevyzerajú rovnako.</p>
+    </div>
+    <div class="portfolio-grid">
+      <div class="mock-wrap">
+        <div class="mock-frame" style="--mbg:#FAF3EC; --mtext:#4A342A; --macc:linear-gradient(135deg,#F1DCC9,#E8C4A0); --mchip:#EFE1D3;">
+          <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+          <div class="mock-body">
+            <div class="m-topbar"><div class="m-brand" style="font-size:11px;" data-sk="Kaderníctvo Bella" data-en="Bella Hair Salon">Kaderníctvo Bella</div><div class="m-rating">★★★★★</div></div>
+            <div class="mock-hero"></div>
+            <div class="mock-row"><div></div><div></div></div>
+          </div>
+          <div class="mock-caption"><b data-sk="Kaderníctvo Bella" data-en="Bella Hair Salon">Kaderníctvo Bella</b><span data-sk="FIREMNÁ" data-en="BUSINESS">FIREMNÁ</span></div>
+        </div>
+        <div class="mock-overlay">
+          <p data-sk="Páči sa vám tento štýl?" data-en="Like this style?">Páči sa vám tento štýl?</p>
+          <a href="https://buy.stripe.com/aFa28k4NX7XQ6pr1JR5J601" data-sk="Kúpiť podobný web →" data-en="Buy a similar website →">Kúpiť podobný web →</a>
+        </div>
+      </div>
+      <div class="mock-wrap">
+        <div class="mock-frame" style="--mbg:#F3F1EC; --mtext:#2E3527; --macc:#3E4A34; --mchip:#E4E0D4;">
+          <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+          <div class="mock-body">
+            <div class="m-topbar"><div class="m-brand" style="font-size:11px;" data-sk="Drevo &amp; Dizajn" data-en="Wood &amp; Design">Drevo &amp; Dizajn</div></div>
+            <div class="mock-hero"></div>
+            <div class="mock-row"><div></div><div></div><div></div></div>
+          </div>
+          <div class="mock-caption"><b data-sk="Drevo &amp; Dizajn" data-en="Wood &amp; Design">Drevo &amp; Dizajn</b><span data-sk="PORTFÓLIO" data-en="PORTFOLIO">PORTFÓLIO</span></div>
+        </div>
+        <div class="mock-overlay">
+          <p data-sk="Páči sa vám tento štýl?" data-en="Like this style?">Páči sa vám tento štýl?</p>
+          <a href="https://buy.stripe.com/28E7sE94dfqi013dsz5J600" data-sk="Kúpiť podobný web →" data-en="Buy a similar website →">Kúpiť podobný web →</a>
+        </div>
+      </div>
+      <div class="mock-wrap">
+        <div class="mock-frame" style="--mbg:#101216; --mtext:#C6FF3D; --macc:#C6FF3D; --mchip:#22262E;">
+          <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+          <div class="mock-body">
+            <div class="m-topbar"><div class="m-brand" style="font-size:11px;">FitZone</div></div>
+            <div class="mock-hero" style="background:linear-gradient(135deg,#C6FF3D,#7FBF00);"></div>
+            <div class="mock-row"><div></div><div></div></div>
+          </div>
+          <div class="mock-caption"><b>FitZone</b><span data-sk="LANDING" data-en="LANDING">LANDING</span></div>
+        </div>
+        <div class="mock-overlay">
+          <p data-sk="Páči sa vám tento štýl?" data-en="Like this style?">Páči sa vám tento štýl?</p>
+          <a href="https://buy.stripe.com/28E7sE94dfqi013dsz5J600" data-sk="Kúpiť podobný web →" data-en="Buy a similar website →">Kúpiť podobný web →</a>
+        </div>
+      </div>
+      <div class="mock-wrap">
+        <div class="mock-frame" style="--mbg:#FAF6EF; --mtext:#5A3E23; --macc:linear-gradient(135deg,#C69C6D,#8A6240); --mchip:#EFE5D5;">
+          <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+          <div class="mock-body">
+            <div class="m-topbar"><div class="m-brand" style="font-size:11px;">Café Lumen</div></div>
+            <div class="mock-hero"></div>
+            <div class="mock-row"><div></div><div></div><div></div></div>
+          </div>
+          <div class="mock-caption"><b>Café Lumen</b><span data-sk="E-SHOP" data-en="E-SHOP">E-SHOP</span></div>
+        </div>
+        <div class="mock-overlay">
+          <p data-sk="Páči sa vám tento štýl?" data-en="Like this style?">Páči sa vám tento štýl?</p>
+          <a href="https://buy.stripe.com/3cI3co94d2DwdRT2NV5J602" data-sk="Kúpiť podobný web →" data-en="Buy a similar website →">Kúpiť podobný web →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proces">
+  <div class="wrap">
+    <div class="process">
+      <div class="section-head">
+        <div class="eyebrow"><span class="dot"></span><span data-sk="proces" data-en="process">proces</span></div>
+        <h2 data-sk="Ako to prebieha" data-en="How it works">Ako to prebieha</h2>
+        <p data-sk="Žiadne zdĺhavé schvaľovanie — od prvého kontaktu po spustenie zvyčajne 1–2 týždne." data-en="No lengthy approvals — from first contact to launch usually takes 1–2 weeks.">Žiadne zdĺhavé schvaľovanie — od prvého kontaktu po spustenie zvyčajne 1–2 týždne.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="step-num">01</span><h4 data-sk="Konzultácia" data-en="Consultation">Konzultácia</h4><p data-sk="Preberieme, čo potrebujete, komu má stránka slúžiť a aký má mať štýl." data-en="We discuss what you need, who the site is for, and what style it should have.">Preberieme, čo potrebujete, komu má stránka slúžiť a aký má mať štýl.</p></div>
+        <div class="step"><span class="step-num">02</span><h4 data-sk="Návrh" data-en="Design">Návrh</h4><p data-sk="Pripravím dizajn na mieru pre váš biznis — žiadna univerzálna šablóna." data-en="I prepare a custom design for your business — no generic templates.">Pripravím dizajn na mieru pre váš biznis — žiadna univerzálna šablóna.</p></div>
+        <div class="step"><span class="step-num">03</span><h4 data-sk="Vývoj" data-en="Development">Vývoj</h4><p data-sk="Postavím stránku, naplním obsahom a otestujem na mobile aj desktope." data-en="I build the site, fill it with content, and test it on mobile and desktop.">Postavím stránku, naplním obsahom a otestujem na mobile aj desktope.</p></div>
+        <div class="step"><span class="step-num">04</span><h4 data-sk="Spustenie" data-en="Launch">Spustenie</h4><p data-sk="Web ide naživo. Vy sa venujete biznisu, ja doladím detaily." data-en="The site goes live. You focus on your business, I fine-tune the details.">Web ide naživo. Vy sa venujete biznisu, ja doladím detaily.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cennik">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span><span data-sk="cenník" data-en="pricing">cenník</span></div>
+      <h2 data-sk="Orientačné ceny" data-en="Estimated pricing">Orientačné ceny</h2>
+      <p data-sk="Presná cena závisí od rozsahu — po konzultácii dostanete konkrétnu ponuku na mieru." data-en="The exact price depends on scope — after a consultation you'll get a tailored quote.">Presná cena závisí od rozsahu — po konzultácii dostanete konkrétnu ponuku na mieru.</p>
+    </div>
+    <div class="pricing">
+      <div class="price-card">
+        <h3 data-sk="Shopify e-shop" data-en="Shopify store">Shopify e-shop</h3>
+        <div class="sub" data-sk="Kompletný online obchod" data-en="Complete online store">Kompletný online obchod</div>
+        <div class="price"><span class="amount" data-sk="od 150 €" data-en="from €150">od 150 €</span> <span data-sk="/ projekt" data-en="/ project">/ projekt</span></div>
+        <ul>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Nastavenie produktov a platieb" data-en="Product & payment setup">Nastavenie produktov a platieb</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Doprava a sklady" data-en="Shipping & inventory">Doprava a sklady</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Dizajn na mieru" data-en="Custom design">Dizajn na mieru</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Napojenie emailingu" data-en="Email marketing setup">Napojenie emailingu</span></li>
+        </ul>
+        <div class="price-note" data-sk="Dodanie do 10–14 pracovných dní." data-en="Delivered within 10–14 business days.">Dodanie do 10–14 pracovných dní.</div>
+        <a href="https://buy.stripe.com/3cI3co94d2DwdRT2NV5J602" class="btn btn-primary btn-block" data-sk="Kúpiť balík" data-en="Buy package">Kúpiť balík</a>
+      </div>
+      <div class="price-card">
+        <h3 data-sk="Landing page" data-en="Landing page">Landing page</h3>
+        <div class="sub" data-sk="Kampaň alebo osobná značka" data-en="Campaign or personal brand">Kampaň alebo osobná značka</div>
+        <div class="price"><span class="amount" data-sk="od 190 €" data-en="from €190">od 190 €</span> <span data-sk="/ projekt" data-en="/ project">/ projekt</span></div>
+        <ul>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="1 stránka na mieru" data-en="1 custom page">1 stránka na mieru</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Responzívny dizajn" data-en="Responsive design">Responzívny dizajn</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Kontaktný formulár" data-en="Contact form">Kontaktný formulár</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Základné SEO" data-en="Basic SEO">Základné SEO</span></li>
+        </ul>
+        <div class="price-note" data-sk="Dodanie do 5–7 pracovných dní." data-en="Delivered within 5–7 business days.">Dodanie do 5–7 pracovných dní.</div>
+        <a href="https://buy.stripe.com/28E7sE94dfqi013dsz5J600" class="btn btn-primary btn-block" data-sk="Kúpiť balík" data-en="Buy package">Kúpiť balík</a>
+      </div>
+      <div class="price-card highlight">
+        <h3 data-sk="Firemná stránka" data-en="Business website">Firemná stránka</h3>
+        <div class="sub" data-sk="Pre lokálne firmy a prevádzky" data-en="For local businesses">Pre lokálne firmy a prevádzky</div>
+        <div class="price"><span class="amount" data-sk="od 290 €" data-en="from €290">od 290 €</span> <span data-sk="/ projekt" data-en="/ project">/ projekt</span></div>
+        <ul>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Viac podstránok" data-en="Multiple subpages">Viac podstránok</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Dizajn na mieru" data-en="Custom design">Dizajn na mieru</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="Mapa, kontakt, referencie" data-en="Map, contact, testimonials">Mapa, kontakt, referencie</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12L10 17L19 7" stroke="#2A4A93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-sk="SEO nastavenie" data-en="SEO setup">SEO nastavenie</span></li>
+        </ul>
+        <div class="price-note" data-sk="Dodanie do 7–10 pracovných dní." data-en="Delivered within 7–10 business days.">Dodanie do 7–10 pracovných dní.</div>
+        <a href="https://buy.stripe.com/aFa28k4NX7XQ6pr1JR5J601" class="btn btn-primary btn-block" data-sk="Kúpiť balík" data-en="Buy package">Kúpiť balík</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span><span data-sk="časté otázky" data-en="FAQ">časté otázky</span></div>
+      <h2 data-sk="Predtým, než napíšete" data-en="Before you get in touch">Predtým, než napíšete</h2>
+      <p data-sk="Odpovede na to, čo sa pýta väčšina klientov pred objednávkou." data-en="Answers to what most clients ask before ordering.">Odpovede na to, čo sa pýta väčšina klientov pred objednávkou.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h4><span>01</span><span class="q" data-sk="Čo ak nemám texty ani fotky?" data-en="What if I don't have text or photos?">Čo ak nemám texty ani fotky?</span></h4>
+        <p data-sk="Nevadí, texty vám pripravím a fotky vieme doriešiť spoločne — buď použijeme tie vaše, alebo nájdeme vhodné riešenie pri konzultácii." data-en="No problem, I'll prepare the text and we can sort out photos together — either use yours or find a solution during the consultation.">Nevadí, texty vám pripravím a fotky vieme doriešiť spoločne — buď použijeme tie vaše, alebo nájdeme vhodné riešenie pri konzultácii.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span>02</span><span class="q" data-sk="Ako prebieha platba?" data-en="How does payment work?">Ako prebieha platba?</span></h4>
+        <p data-sk='Po kliknutí na "Kúpiť balík" zaplatíte bezpečne cez Stripe. Automaticky vám príde email s ďalšími krokmi a do 24 hodín sa vám ozvem osobne.' data-en='After clicking "Buy package" you pay securely via Stripe. You automatically get an email with next steps, and I personally follow up within 24 hours.'>Po kliknutí na "Kúpiť balík" zaplatíte bezpečne cez Stripe. Automaticky vám príde email s ďalšími krokmi a do 24 hodín sa vám ozvem osobne.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span>03</span><span class="q" data-sk="Viem si web neskôr upravovať sám?" data-en="Can I edit the site myself later?">Viem si web neskôr upravovať sám?</span></h4>
+        <p data-sk="Áno, dostanete prístup do administrácie (Shopify alebo iný systém podľa typu webu) a krátke zaškolenie, ako meniť texty a produkty." data-en="Yes, you'll get admin access (Shopify or another system depending on the site type) plus a short training on how to change text and products.">Áno, dostanete prístup do administrácie (Shopify alebo iný systém podľa typu webu) a krátke zaškolenie, ako meniť texty a produkty.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span>04</span><span class="q" data-sk="Čo ak potrebujem niečo netypické?" data-en="What if I need something non-standard?">Čo ak potrebujem niečo netypické?</span></h4>
+        <p data-sk="Napíšte mi cez formulár nižšie, čo presne potrebujete — cenník je orientačný a vieme sa dohodnúť na riešení na mieru." data-en="Send me a message below with exactly what you need — the pricing is a guideline and we can agree on a custom solution.">Napíšte mi cez formulár nižšie, čo presne potrebujete — cenník je orientačný a vieme sa dohodnúť na riešení na mieru.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="kontakt">
+  <div class="wrap">
+    <div class="contact-box">
+      <div>
+        <h2 data-sk="Poďme spraviť váš web" data-en="Let's build your website">Poďme spraviť váš web</h2>
+        <p data-sk="Napíšte pár viet o vašom projekte — ozvem sa do 24 hodín s návrhom a orientačnou cenou." data-en="Write a few sentences about your project — I'll get back to you within 24 hours with a proposal and estimated price.">Napíšte pár viet o vašom projekte — ozvem sa do 24 hodín s návrhom a orientačnou cenou.</p>
+        <div class="contact-info">
+          <div><span class="ci-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6L12 13L21 6" stroke="#2A4A93" stroke-width="1.7"/><rect x="3" y="5" width="18" height="14" rx="2" stroke="#2A4A93" stroke-width="1.7"/></svg></span>reyli.cdc@gmail.com</div>
+          <div><span class="ci-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2A4A93" stroke-width="1.7"/><path d="M3 12H21M12 3C14.5 5.7 15.8 9 15.8 12C15.8 15 14.5 18.3 12 21C9.5 18.3 8.2 15 8.2 12C8.2 9 9.5 5.7 12 3Z" stroke="#2A4A93" stroke-width="1.5"/></svg></span>reylicdc-design.github.io/reylic-web-studio</div>
+        </div>
+      </div>
+      <form action="https://formspree.io/f/xlgqblko" method="POST">
+        <input type="text" name="meno" placeholder="Meno" data-sk-ph="Meno" data-en-ph="Name" required>
+        <input type="email" name="email" placeholder="Email" data-sk-ph="Email" data-en-ph="Email" required>
+        <select name="typ_projektu" required style="border:1.5px solid var(--grid); border-radius:9px; padding:13px 14px; font-family:'Inter'; font-size:14px; background:var(--paper); color:var(--ink);">
+          <option value="" data-sk="Vyberte typ projektu" data-en="Select project type">Vyberte typ projektu</option>
+          <option value="Landing page" data-sk="Landing page" data-en="Landing page">Landing page</option>
+          <option value="Firemná stránka" data-sk="Firemná stránka" data-en="Business website">Firemná stránka</option>
+          <option value="Shopify e-shop" data-sk="Shopify e-shop" data-en="Shopify store">Shopify e-shop</option>
+          <option value="Redizajn existujúceho webu" data-sk="Redizajn existujúceho webu" data-en="Redesign of existing website">Redizajn existujúceho webu</option>
+          <option value="Osobná značka / Portfólio" data-sk="Osobná značka / Portfólio" data-en="Personal brand / Portfolio">Osobná značka / Portfólio</option>
+          <option value="Rezervačný systém" data-sk="Rezervačný systém" data-en="Booking system">Rezervačný systém</option>
+          <option value="Iné / neistý" data-sk="Iné / ešte neviem" data-en="Other / not sure yet">Iné / ešte neviem</option>
+        </select>
+        <input type="text" name="rozpocet" placeholder="Orientačný rozpočet (voliteľné)" data-sk-ph="Orientačný rozpočet (voliteľné)" data-en-ph="Estimated budget (optional)">
+        <textarea name="popis" placeholder="Krátky popis projektu" data-sk-ph="Krátky popis projektu" data-en-ph="Short project description" required></textarea>
+        <button type="submit" class="btn btn-primary btn-block" style="border:none; cursor:pointer;" data-sk="Odoslať dopyt" data-en="Send inquiry">Odoslať dopyt</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div data-sk="© 2026 Reylic — weby a e-shopy na mieru" data-en="© 2026 Reylic — websites and online stores">© 2026 Reylic — weby a e-shopy na mieru</div>
+    <div class="flinks">
+      <a href="#sluzby" data-sk="Služby" data-en="Services">Služby</a>
+      <a href="#doplnky" data-sk="Doplnky" data-en="Add-ons">Doplnky</a>
+      <a href="#prace" data-sk="Práce" data-en="Work">Práce</a>
+      <a href="#cennik" data-sk="Cenník" data-en="Pricing">Cenník</a>
+      <a href="#faq" data-sk="FAQ" data-en="FAQ">FAQ</a>
+      <a href="#kontakt" data-sk="Kontakt" data-en="Contact">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var current = 'sk';
+  function applyLang(lang){
+    document.querySelectorAll('[data-sk-html]').forEach(function(el){
+      el.innerHTML = lang === 'en' ? el.getAttribute('data-en-html') : el.getAttribute('data-sk-html');
+    });
+    document.querySelectorAll('[data-sk]').forEach(function(el){
+      el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-sk');
+    });
+    document.querySelectorAll('[data-sk-ph]').forEach(function(el){
+      el.setAttribute('placeholder', lang === 'en' ? el.getAttribute('data-en-ph') : el.getAttribute('data-sk-ph'));
+    });
+    document.documentElement.lang = lang;
+    var btn = document.getElementById('langToggle');
+    if(btn){ btn.textContent = lang === 'en' ? 'SK' : 'EN'; }
+  }
+  var toggle = document.getElementById('langToggle');
+  if(toggle){
+    toggle.addEventListener('click', function(){
+      current = current === 'sk' ? 'en' : 'sk';
+      applyLang(current);
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
